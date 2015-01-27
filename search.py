@@ -58,30 +58,26 @@ class Search:
 				self.visited.append(node)
 			
 			if self.check_for_goal():
-				return
+				return self.path_to_goal()
 			
 			else:
 				for i in range(len(node.string)):
-					parent = State(cpy=node) #reate a temp state parent
+					state = State(cpy=node) #reate a temp state parent
 					if i != node.string.index('x'):
-						parent.move(i)
-						state = State(cpy=parent)
+						state.move(i)
 						if not self.is_in_visited(state):
 							self.visited.append(state)
 							self.uninformed_put(state)
 							self.tree.create_node(state.string,state.string,parent=node.string)
 
 
-	def is_in_visited(self,state):
+	def is_in_visited (self,state):
 		for s in self.visited:
 			if s.string == state.string:
 				return True
 		return False
-			
 
-
-
-	def check_for_goal(self):
+	def check_for_goal (self):
 		'''returns True if goal_state is in visited'''
 		for state in self.visited:
 			if self.goal_state.string == state.string:
@@ -89,16 +85,15 @@ class Search:
 		return False
 
 
+	def path_to_goal (self):
+		node = self.tree[self.goal_state.string]
+		move_list  = [node]
 
+		while not node.is_root():
+			node = self.tree[node.bpointer]
+			move_list.append(node)
+		
 
-
-
-
-
-
-
-
-
-
-
-
+		#reverse move_list and print 
+		for i,n in enumerate(reversed(move_list)):
+			print n.tag, "step %d" %i, "move %d"%n.tag.index("x")
