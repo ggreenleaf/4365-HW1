@@ -1,7 +1,7 @@
 from treelib import Tree
 from Queue import Queue
 from state import State
-
+from math import factorial
 #given a init_state string s
 #find the given goal state for the game
 # the goal state is a state such that the string 
@@ -18,8 +18,14 @@ class Search:
 	def __init__ (self, init_str, arg, cost):
 		self.cost = cost
 		self.tree = Tree()
-		init_state = State(init_str)
-		self.goal_state = State(get_goal_state(init_str))
+
+		init_state = State(0,init_str) #tid used for tree 
+
+		length = len(init_str)
+		#if goal state is the last state visited then it will be this state number
+		max_num_states = factorial(length) / (factorial(length//2)**2)
+		self.goal_state = State(max_num_states, get_goal_state(init_str))
+		
 		#data structure for Depth first search is a list (python list can be a stack)
 		if arg == "DFS":
 			self.L = [init_state]
@@ -28,17 +34,20 @@ class Search:
 			self.L = Queue()
 			self.L.put(init_state)
 
-		self.visited = [init_state] #list of visisted states
-		self.tree.create_node(init_state.string, init_state.string) #root of search tree
-		#need IDS, A*, greedy
-	
-	def uninformed_get(self):
+		self.visited = [] #list of visisted states
+		self.cur_tree_id = 1
+		self.tree.create_node(init_state.string,init_state.tid)
+		#need BestFS, A*, greedy
+
+
+
+	def get(self):
 		if isinstance(self.L, Queue):
 			return self.L.get()
 		elif isinstance(self.L, list):
 			return self.L.pop()
 	
-	def uninformed_put(self,state):
+	def put(self,state):
 		if isinstance(self.L, Queue):
 			self.L.put(state)
 		elif isinstance(self.L, list):
@@ -50,43 +59,44 @@ class Search:
 		elif isinstance(self.L, list):
 			return not bool(self.L) #bool ([]) returns false 
 
-	def uninformed_search(self):
+	def search(self):
 		while not self.is_empty():
-			node = self.uninformed_get()
-			
-			if not self.is_in_visited(node) : #don't expand node already expande donce
-				self.visited.append(node)
-			
-			if self.check_for_goal():
-				return self.path_to_goal()
-			
+			node = self.get()			
+			if self.check_for_goal(node):
+				return self.path_to_goal(node)
 			else:
-				for i in range(len(node.string)):
-					state = State(cpy=node) #reate a temp state parent
-					if i != node.string.index('x'):
-						state.move(i)
-						if not self.is_in_visited(state):
-							self.visited.append(state)
-							self.uninformed_put(state)
-							self.tree.create_node(state.string,state.string,parent=node.string)
+				self.expand(node)
 
+	def expand(self,node):
+		if not self.is_in_visited(node):
+			self.visited.append(node) #
 
-	def is_in_visited (self,state):
+			for i in range(5):
+				state = State(self.cur_tree_id, cpy=node) #create a copy of node to apply move then add to L and tree
+				self.cur_tree_id += 1
+				if i != node.string.index('x'): #don't move x into itself
+					state.move(i)
+					self.put(state) #put state into data structure L 
+					self.add_to_tree(state,node)
+
+	def is_in_visited (self, state):
 		for s in self.visited:
 			if s.string == state.string:
 				return True
 		return False
 
-	def check_for_goal (self):
+	def check_for_goal (self, node):
 		'''returns True if goal_state is in visited'''
-		for state in self.visited:
-			if self.goal_state.string == state.string:
-				return True
-		return False
+		return node.string == self.goal_state.string
 
 
-	def path_to_goal (self):
-		node = self.tree[self.goal_state.string]
+
+	def add_to_tree (self, node, parent):
+		self.tree.create_node(node.string, node.tid, parent=parent.tid)
+
+	def path_to_goal (self, goal):
+		#the goal state will be the last node added to the tree -> cur_tree_id - 1
+		node = self.tree[goal.tid] 
 		move_list  = [node]
 
 		while not node.is_root():
