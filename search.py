@@ -23,23 +23,26 @@ class Search:
 		init_state = State(0,0,s=init_str) #tid used for tree 
 
 		length = len(init_str)
+		
 		#if goal state is the last state visited then it will be this state number
 		max_num_states = factorial(length) / (factorial(length//2)**2)
 		self.goal_state = State(max_num_states,0, s=get_goal_string(init_str))
 		
-		#data structure for Depth first search is a list (python list can be a stack)
-		if arg == "DFS" or arg == "UCS" or arg == "a-star" or arg == "GS":
-			self.L = [init_state]
-		#data structure for Breadth first is a Queue import Queue class for L
-		elif arg == "BFS":
+
+		#data structure for BFS is a Queue import Queue class for L
+		if arg == "BFS":
 			self.L = Queue()
 			self.L.put(init_state)
+		else:
+			if arg not in ["DFS","UCS","A-STAR","GS"]:
+				arg = "DFS" #if not a valid search default to DFS
+	
+			self.L = [init_state] #only BFS uses Queue every other search will use a list
+		
 
 		self.visited = [] #list of visisted states
 		self.cur_tree_id = 1
 		self.tree.create_node(init_state.string,init_state.tid)
-		#need BestFS, A*, greedy
-
 
 
 	def get(self):
@@ -49,7 +52,7 @@ class Search:
 			if self.arg == "UCS":
 				self.L.sort(key=test_sort, reverse=True) 
 				return self.L.pop()
-			if self.arg == "a-star":
+			if self.arg == "A-STAR":
 				self.L.sort(key=lambda n: n.cost + n.num_misplaced, reverse=True)
 				return self.L.pop()
 			if self.arg == "GS":
@@ -92,20 +95,13 @@ class Search:
 					self.add_to_tree(state,node)
 
 
-
-	def get_misplaced_count(self,node):
-		pass
-
 	def is_in_visited (self, state):
-		for s in self.visited:
-			if s.string == state.string:
-				return True
-		return False
+		'''checks visited if a state as already been exanded'''
+		return state.string in [s for s in self.visited]
 
 	def check_for_goal (self, node):
-		'''returns True if goal_state is in visited'''
-		return node.string == self.goal_state.string
-
+		'''returns True if node has 0 misplaced tiles'''
+		return not bool(node.num_misplaced) #goal state reached if misplaced tiles is 0
 
 	def add_to_tree (self, node, parent):
 		self.tree.create_node(node.string, node.tid, parent=parent.tid)

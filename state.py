@@ -8,9 +8,9 @@ class State:
 		
 		self.tid = tid
 		self.cost = cost
-		self.num_misplaced = self.get_misplaced_count()
+		self.num_misplaced = self.count_misplaced()
 	
-	def get_misplaced_count(self): #our huesristic function
+	def count_misplaced(self): #our huesristic function
 		'''returns the number of outplaced tiles in string'''
 		n = len(self.string)
 		misplaced = 0
@@ -40,5 +40,5 @@ class State:
 		str_list[x_indx], str_list[i] = str_list[i], str_list[x_indx]
 		
 		self.string = "".join(str_list)
-
+		self.num_misplaced = self.count_misplaced() #after move recount number misplaced
 
