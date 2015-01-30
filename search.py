@@ -15,6 +15,13 @@ def get_goal_string(s):
 	return "".join(blacks) + "x" + "".join(whites)
 
 
+#Search contain all the methods and members to run the different searches
+# self.tree is the search tree created by searches
+# arg will be the search that is going to be performed (A-STAR, BFS, ... )
+# init_str is the initial string will act as the root of the tree and the 
+# start of the search
+# expanded will be a list of expanded nodes to reinsure a node is only expanded once
+# cur_tree_id will be the id of a node in the tree each node must have a unique id
 class Search:
 	def __init__ (self, init_str, arg, cost):
 		self.cost = cost
@@ -24,11 +31,7 @@ class Search:
 
 		length = len(init_str)
 		
-		#if goal state is the last state visited then it will be this state number
-		max_num_states = factorial(length) / (factorial(length//2)**2)
-		self.goal_state = State(max_num_states,0, s=get_goal_string(init_str))
-		
-
+	
 		#data structure for BFS is a Queue import Queue class for L
 		if arg == "BFS":
 			self.L = Queue()
@@ -40,7 +43,7 @@ class Search:
 			self.L = [init_state] #only BFS uses Queue every other search will use a list
 		
 
-		self.visited = [] #list of visisted states
+		self.expanded = [] #list of visisted states
 		self.cur_tree_id = 1
 		self.tree.create_node(init_state.string,init_state.tid)
 
@@ -48,6 +51,7 @@ class Search:
 	def get(self):
 		if isinstance(self.L, Queue):
 			return self.L.get()
+		
 		elif isinstance(self.L, list):
 			if self.arg == "UCS":
 				self.L.sort(key=test_sort, reverse=True) 
@@ -65,15 +69,17 @@ class Search:
 	def put(self,state):
 		if isinstance(self.L, Queue):
 			self.L.put(state)
+		
 		elif isinstance(self.L, list):
 			self.L.append(state)
 	
 	def is_empty(self):
 		if isinstance(self.L, Queue):
 			return self.L.empty()
+		
 		elif isinstance(self.L, list):
 			return not bool(self.L) #bool ([]) returns false 
-
+	#generic search algorithm 
 	def search(self):
 		while not self.is_empty():
 			node = self.get()			
@@ -83,8 +89,8 @@ class Search:
 				self.expand(node)
 
 	def expand(self,node):
-		if not self.is_in_visited(node):
-			self.visited.append(node) #
+		if not self.is_in_expanded(node):
+			self.expanded.append(node) #
 			for i in range(5):
 				cost = node.cost + 1 #total path cost
 				state = State(self.cur_tree_id,cost, cpy=node) #create a copy of node to apply move then add to L and tree
@@ -95,19 +101,18 @@ class Search:
 					self.add_to_tree(state,node)
 
 
-	def is_in_visited (self, state):
-		'''checks visited if a state as already been exanded'''
-		return state.string in [s for s in self.visited]
+	def is_in_expanded (self, state):
+		# checks expanded if a state as already been exanded
+		return state.string in self.expanded
 
 	def check_for_goal (self, node):
-		'''returns True if node has 0 misplaced tiles'''
-		return not bool(node.num_misplaced) #goal state reached if misplaced tiles is 0
+		#returns true if node as no misplaced tiles
+		return not bool(node.num_misplaced) 
 
 	def add_to_tree (self, node, parent):
 		self.tree.create_node(node.string, node.tid, parent=parent.tid)
 
 	def path_to_goal (self, goal):
-		#the goal state will be the last node added to the tree -> cur_tree_id - 1
 		node = self.tree[goal.tid] 
 		move_list  = [node]
 		while not node.is_root():
