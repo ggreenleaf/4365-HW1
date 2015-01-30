@@ -29,7 +29,7 @@ class Search:
 		self.arg = arg
 		init_state = State(0,0,s=init_str) #tid used for tree 
 
-		length = len(init_str)
+		self.length = len(init_str) #length of puzzle used for making moves
 		
 	
 		#data structure for BFS is a Queue import Queue class for L
@@ -83,7 +83,7 @@ class Search:
 	def search(self):
 		while not self.is_empty():
 			node = self.get()			
-			if self.check_for_goal(node):
+			if self.is_goal(node):
 				return self.path_to_goal(node)
 			else:
 				self.expand(node)
@@ -91,7 +91,7 @@ class Search:
 	def expand(self,node):
 		if not self.is_in_expanded(node):
 			self.expanded.append(node) #
-			for i in range(5):
+			for i in range(self.length):
 				cost = node.cost + 1 #total path cost
 				state = State(self.cur_tree_id,cost, cpy=node) #create a copy of node to apply move then add to L and tree
 				self.cur_tree_id += 1
@@ -103,9 +103,9 @@ class Search:
 
 	def is_in_expanded (self, state):
 		# checks expanded if a state as already been exanded
-		return state.string in self.expanded
+		return state in self.expanded
 
-	def check_for_goal (self, node):
+	def is_goal (self, node):
 		#returns true if node as no misplaced tiles
 		return not bool(node.num_misplaced) 
 
@@ -122,3 +122,8 @@ class Search:
 		#reverse move_list and print 
 		for i,n in enumerate(reversed(move_list)):
 			print n.tag, "step %d" %i, "move %d"%n.tag.index("x")
+
+
+if __name__ == "__main__":
+	s = Search("wwxbb","A-STAR",0)
+	s.search()

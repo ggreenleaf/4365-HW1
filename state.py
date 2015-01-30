@@ -10,6 +10,9 @@ class State:
 		self.cost = cost
 		self.num_misplaced = self.count_misplaced()
 	
+	def __eq__(self, other):
+		return self.string == other.string
+
 	def count_misplaced(self): #our huesristic function
 		'''returns the number of outplaced tiles in string'''
 		n = len(self.string)
