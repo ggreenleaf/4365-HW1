@@ -7,27 +7,28 @@ from math import factorial
 # the goal state is a state such that the string 
 # as blacks on the left side and whites on the right
 # with an x seperating the 2
-def get_goal_state(s):
+def get_goal_string(s):
 	'''returns the goal state of board of s'''
 	length = len(s)
 	blacks = ["b" for i in xrange(length//2)]
 	whites = ["w" for i in xrange(length//2)]
 	return "".join(blacks) + "x" + "".join(whites)
 
+
 class Search:
 	def __init__ (self, init_str, arg, cost):
 		self.cost = cost
 		self.tree = Tree()
-
-		init_state = State(0,init_str) #tid used for tree 
+		self.arg = arg
+		init_state = State(0,0,s=init_str) #tid used for tree 
 
 		length = len(init_str)
 		#if goal state is the last state visited then it will be this state number
 		max_num_states = factorial(length) / (factorial(length//2)**2)
-		self.goal_state = State(max_num_states, get_goal_state(init_str))
+		self.goal_state = State(max_num_states,0, s=get_goal_string(init_str))
 		
 		#data structure for Depth first search is a list (python list can be a stack)
-		if arg == "DFS":
+		if arg == "DFS" or arg == "UCS" or arg == "a-star" or arg == "GS":
 			self.L = [init_state]
 		#data structure for Breadth first is a Queue import Queue class for L
 		elif arg == "BFS":
@@ -45,7 +46,18 @@ class Search:
 		if isinstance(self.L, Queue):
 			return self.L.get()
 		elif isinstance(self.L, list):
-			return self.L.pop()
+			if self.arg == "UCS":
+				self.L.sort(key=test_sort, reverse=True) 
+				return self.L.pop()
+			if self.arg == "a-star":
+				self.L.sort(key=lambda n: n.cost + n.num_misplaced, reverse=True)
+				return self.L.pop()
+			if self.arg == "GS":
+				self.L.sort(key=lambda n: n.num_misplaced, reverse=True)
+				return self.L.pop()
+			else:	
+				return self.L.pop()
+
 	
 	def put(self,state):
 		if isinstance(self.L, Queue):
@@ -70,14 +82,19 @@ class Search:
 	def expand(self,node):
 		if not self.is_in_visited(node):
 			self.visited.append(node) #
-
 			for i in range(5):
-				state = State(self.cur_tree_id, cpy=node) #create a copy of node to apply move then add to L and tree
+				cost = node.cost + 1 #total path cost
+				state = State(self.cur_tree_id,cost, cpy=node) #create a copy of node to apply move then add to L and tree
 				self.cur_tree_id += 1
 				if i != node.string.index('x'): #don't move x into itself
 					state.move(i)
 					self.put(state) #put state into data structure L 
 					self.add_to_tree(state,node)
+
+
+
+	def get_misplaced_count(self,node):
+		pass
 
 	def is_in_visited (self, state):
 		for s in self.visited:
@@ -90,7 +107,6 @@ class Search:
 		return node.string == self.goal_state.string
 
 
-
 	def add_to_tree (self, node, parent):
 		self.tree.create_node(node.string, node.tid, parent=parent.tid)
 
@@ -98,12 +114,10 @@ class Search:
 		#the goal state will be the last node added to the tree -> cur_tree_id - 1
 		node = self.tree[goal.tid] 
 		move_list  = [node]
-
 		while not node.is_root():
 			node = self.tree[node.bpointer]
 			move_list.append(node)
 		
-
 		#reverse move_list and print 
 		for i,n in enumerate(reversed(move_list)):
 			print n.tag, "step %d" %i, "move %d"%n.tag.index("x")
