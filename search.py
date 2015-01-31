@@ -27,7 +27,7 @@ class Search:
 		self.cost = cost
 		self.tree = Tree()
 		self.arg = arg
-		init_state = State(0,0,s=init_str) #tid used for tree 
+		init_state = State(0,0,init_str) 
 
 		self.length = len(init_str) #length of puzzle used for making moves
 		
@@ -79,7 +79,8 @@ class Search:
 		
 		elif isinstance(self.L, list):
 			return not bool(self.L) #bool ([]) returns false 
-	#generic search algorithm 
+	
+	git#generic search algorithm 
 	def search(self):
 		while not self.is_empty():
 			node = self.get()			
@@ -88,29 +89,29 @@ class Search:
 			else:
 				self.expand(node)
 
-	def expand(self,node):
-		if not self.is_in_expanded(node):
-			self.expanded.append(node) #
+	def expand(self,state):
+		if not self.is_in_expanded(state):
+			self.expanded.append(state) #
 			for i in range(self.length):
-				cost = node.cost + 1 #total path cost
-				state = State(self.cur_tree_id,cost, cpy=node) #create a copy of node to apply move then add to L and tree
+				cost = state.cost + 1 #total path cost
+				successor = State(self.cur_tree_id,cost, state.string) #create a copy of node to apply move then add to L and tree
 				self.cur_tree_id += 1
-				if i != node.string.index('x'): #don't move x into itself
-					state.move(i)
-					self.put(state) #put state into data structure L 
-					self.add_to_tree(state,node)
+				if i != state.string.index('x'): #don't move x into itself
+					successor.move(i)
+					self.put(successor) #put state into data structure L 
+					self.add_to_tree(successor,state)
 
 
 	def is_in_expanded (self, state):
 		# checks expanded if a state as already been exanded
 		return state in self.expanded
 
-	def is_goal (self, node):
+	def is_goal (self, state):
 		#returns true if node as no misplaced tiles
-		return not bool(node.num_misplaced) 
+		return not bool(state.num_misplaced) 
 
-	def add_to_tree (self, node, parent):
-		self.tree.create_node(node.string, node.tid, parent=parent.tid)
+	def add_to_tree (self, state, parent):
+		self.tree.create_node(state.string, state.tid, parent=parent.tid)
 
 	def path_to_goal (self, goal):
 		node = self.tree[goal.tid] 
@@ -126,4 +127,7 @@ class Search:
 
 if __name__ == "__main__":
 	s = Search("wwxbb","A-STAR",0)
+	s.search()
+	print "new board"
+	s = Search("bxwwbbw","A-STAR",0)
 	s.search()

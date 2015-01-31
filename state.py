@@ -1,11 +1,8 @@
 class State:
-	def __init__(self, tid, cost, s=None, cpy=None):
+	def __init__(self, tid, cost, s):
 		#need to check for valid inputs
-		if cpy:
-			self.cpy_constructor(cpy)
-		else:
-			self.non_cpy_constructor(s)
-		
+
+		self.string = s.lower()
 		self.tid = tid
 		self.cost = cost
 		self.num_misplaced = self.count_misplaced()
@@ -26,11 +23,6 @@ class State:
 				misplaced += 1
 		return misplaced
 
-	def cpy_constructor(self, cpy):
-		self.string = cpy.string
-
-	def non_cpy_constructor(self,s):
-		self.string = s.lower()
 
 	def move(self, i):
 		'''move index with index where 'x' occurs '''
