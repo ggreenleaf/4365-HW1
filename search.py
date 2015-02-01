@@ -123,18 +123,14 @@ class Search:
 	def path_to_goal (self, goal):
 		node = self.tree[goal.tid] 
 		move_list  = [node]
+		
 		while not node.is_root():
 			node = self.tree[node.bpointer]
 			move_list.append(node)
 		
 		#reverse move_list and print 
-		for i,n in enumerate(reversed(move_list)):
-			print n.tag, "step %d" %i, "move %d"%n.tag.index("x")
+		move_list = list(reversed(move_list))
+		print "step 0: ", move_list[0].tag
+		for i in range(1, len(move_list)):
+			print "step %i: " % i,"move %i"% move_list[i].tag.index("x"), move_list[i].tag
 
-
-if __name__ == "__main__":
-	s = Search("wwxbb","A-STAR",0)
-	s.search()
-	print "new board"
-	s = Search("bxwwbbw","A-STAR",0)
-	s.search()
