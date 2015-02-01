@@ -1,7 +1,7 @@
 from treelib import Tree
 from Queue import Queue
 from state import State
-from math import factorial
+
 #given a init_state string s
 #find the given goal state for the game
 # the goal state is a state such that the string 
@@ -13,6 +13,7 @@ def get_goal_string(s):
 	blacks = ["b" for i in xrange(length//2)]
 	whites = ["w" for i in xrange(length//2)]
 	return "".join(blacks) + "x" + "".join(whites)
+
 
 
 #Search contain all the methods and members to run the different searches
@@ -31,7 +32,6 @@ class Search:
 
 		self.length = len(init_str) #length of puzzle used for making moves
 		
-	
 		#data structure for BFS is a Queue import Queue class for L
 		if arg == "BFS":
 			self.L = Queue()
@@ -39,7 +39,7 @@ class Search:
 		else:
 			if arg not in ["DFS","UCS","A-STAR","GS"]:
 				arg = "DFS" #if not a valid search default to DFS
-	
+				
 			self.L = [init_state] #only BFS uses Queue every other search will use a list
 		
 
@@ -47,23 +47,30 @@ class Search:
 		self.cur_tree_id = 1
 		self.tree.create_node(init_state.string,init_state.tid)
 
-
+	#returns the needed node from structure L
+	#in GS,UCS,A-STAR it requires a min heap.
+	#use a list but sort the list by the given f-costs
+	# UCS : "cost to of a path(number of moves)"
+	# A-STAR : "path cost + number of tiles misplaced"
+	# GS : "number of tiles misplaced"
+	#since list does not have a remove from front
+	#reverse the sorted list and pop.
 	def get(self):
 		if isinstance(self.L, Queue):
 			return self.L.get()
 		
 		elif isinstance(self.L, list):
 			if self.arg == "UCS":
-				self.L.sort(key=test_sort, reverse=True) 
-				return self.L.pop()
-			if self.arg == "A-STAR":
-				self.L.sort(key=lambda n: n.cost + n.num_misplaced, reverse=True)
-				return self.L.pop()
-			if self.arg == "GS":
-				self.L.sort(key=lambda n: n.num_misplaced, reverse=True)
-				return self.L.pop()
-			else:	
-				return self.L.pop()
+				self.L.sort(key = n.cost, reverse=True) 
+
+			elif self.arg == "A-STAR":
+				self.L.sort(key = lambda n: n.cost + n.num_misplaced, reverse=True)
+
+			#returns lowest f cost where f(n)=h(n)
+			elif self.arg == "GS":
+				self.L.sort(key = n.num_misplaced, reverse=True)
+
+			return self.L.pop()
 
 	
 	def put(self,state):
@@ -80,7 +87,7 @@ class Search:
 		elif isinstance(self.L, list):
 			return not bool(self.L) #bool ([]) returns false 
 	
-	git#generic search algorithm 
+	#generic search algorithm 
 	def search(self):
 		while not self.is_empty():
 			node = self.get()			

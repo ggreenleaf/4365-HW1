@@ -9,7 +9,7 @@ import sys
 #return True if its valid else return False
 def is_valid_start(s):
 	#board must be odd numbers and less then 13
-	if len(s) % 2 == 0 or len(s) > 13:
+	if len(s) % 2 == 0 or (0 < len(s) > 13):
 		return False
 	#count of b and w must be the same and only 1 x must occur
 	return (s.count("w") == s.count("b") and s.count("x") == 1)
