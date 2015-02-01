@@ -132,5 +132,5 @@ class Search:
 		move_list = list(reversed(move_list))
 		print "step 0: ", move_list[0].tag
 		for i in range(1, len(move_list)):
-			print "step %i: " % i,"move %i"% move_list[i].tag.index("x"), move_list[i].tag
+			print "step %i: " % i, "move %i"% move_list[i].tag.index("x"), move_list[i].tag
 
