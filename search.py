@@ -61,14 +61,14 @@ class Search:
 		
 		elif isinstance(self.L, list):
 			if self.arg == "UCS":
-				self.L.sort(key = n.cost, reverse=True) 
+				self.L.sort(key = lambda n: n.cost, reverse=True) 
 
 			elif self.arg == "A-STAR":
 				self.L.sort(key = lambda n: n.cost + n.num_misplaced, reverse=True)
 
 			#returns lowest f cost where f(n)=h(n)
 			elif self.arg == "GS":
-				self.L.sort(key = n.num_misplaced, reverse=True)
+				self.L.sort(key = lambda n: n.num_misplaced, reverse=True)
 
 			return self.L.pop()
 
