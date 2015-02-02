@@ -1,4 +1,4 @@
-from treelib import Tree #tree library provided by 
+from treelib import Tree
 from Queue import Queue
 from state import State
 

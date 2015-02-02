@@ -14,6 +14,8 @@ def is_valid_start(s):
 	#count of b and w must be the same and only 1 x must occur
 	return (s.count("w") == s.count("b") and s.count("x") == 1)
 
+
+#check if search algorithm is a valid search
 def is_valid_search(s):
 	return s in ["UCS","GS", "BFS","A-STAR","DFS"]
 
