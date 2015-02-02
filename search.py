@@ -19,13 +19,13 @@ def get_goal_string(s):
 #Search contain all the methods and members to run the different searches
 # self.tree is the search tree created by searches
 # arg will be the search that is going to be performed (A-STAR, BFS, ... )
-# init_str is the initial string will act as the root of the tree and the 
-# start of the search
+# init_str is the initial string will act as the root of the tree and the start of the search
 # expanded will be a list of expanded nodes to reinsure a node is only expanded once
 # cur_tree_id will be the id of a node in the tree each node must have a unique id
+# cost_flag is True if using a variable cost or False if using a constant cost
 class Search:
-	def __init__ (self, init_str, arg, cost):
-		self.cost = cost
+	def __init__ (self, init_str, arg, cost_flag):
+		self.cost_flag = cost_flag
 		self.tree = Tree()
 		self.arg = arg
 		init_state = State(0,0,init_str) 
@@ -43,18 +43,18 @@ class Search:
 			self.L = [init_state] #only BFS uses Queue every other search will use a list
 		
 
-		self.expanded = [] #list of visisted states
-		self.cur_tree_id = 1
-		self.tree.create_node(init_state.string,init_state.tid)
+		self.expanded = [] #list of expanded states
+		self.cur_tree_id = 1 #unique tree id per state added to the tree
+		self.tree.create_node(init_state.string,init_state.tid) #creates the root node of the search tree
 
-	#returns the needed node from structure L
-	#in GS,UCS,A-STAR it requires a min heap.
-	#use a list but sort the list by the given f-costs
+	# returns the needed node from structure L
+	# in GS,UCS,A-STAR it requires a min heap.
+	# use a list but sort the list by the given f-costs
 	# UCS : "cost to of a path(number of moves)"
 	# A-STAR : "path cost + number of tiles misplaced"
 	# GS : "number of tiles misplaced"
-	#since list does not have a remove from front
-	#reverse the sorted list and pop.
+	# since list does not have a remove from front
+	# reverse the sorted list and pop.
 	def get(self):
 		if isinstance(self.L, Queue):
 			return self.L.get()
@@ -72,7 +72,6 @@ class Search:
 
 			return self.L.pop()
 
-	
 	def put(self,state):
 		if isinstance(self.L, Queue):
 			self.L.put(state)
@@ -87,7 +86,8 @@ class Search:
 		elif isinstance(self.L, list):
 			return not bool(self.L) #bool ([]) returns false 
 	
-	#generic search algorithm 
+	# generic search will handle all searches
+	# the node to chosen for the search will depend on the get method 
 	def search(self):
 		while not self.is_empty():
 			node = self.get()			
@@ -114,7 +114,7 @@ class Search:
 		return state in self.expanded
 
 	def is_goal (self, state):
-		#returns true if node as no misplaced tiles
+		# returns true if node as no misplaced tiles
 		return not bool(state.num_misplaced) 
 
 	def add_to_tree (self, state, parent):

@@ -31,9 +31,9 @@ class State:
 			return
 		
 		x_indx = self.string.index('x')
-		str_list = list(self.string)
+		str_list = list(self.string) #for easier swapping use create a list of chars
 		str_list[x_indx], str_list[i] = str_list[i], str_list[x_indx]
 		
-		self.string = "".join(str_list)
-		self.num_misplaced = self.count_misplaced() #after move recount number misplaced
+		self.string = "".join(str_list) #join the list back into a string
+		self.num_misplaced = self.count_misplaced() #after move re-count number misplaced 
 

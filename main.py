@@ -20,8 +20,11 @@ def is_valid_search(s):
 
 if __name__ == "__main__":
 	
-	init_str = sys.argv[1].lower()
-	search_alg = sys.argv[2].upper()
+	#main input to run the program will be python main.py <starting positions> <BFS|A-STAR|UCS|DFS|GS> [-cost] 
+	#if cost is passed then use variable cost else use constant cost for search
+
+	init_str = sys.argv[1].lower()   # change input
+	search_alg = sys.argv[2].upper() # avoid case issues
 	
 	while not is_valid_start(init_str):
 		print "Please enter a valid starting board"
@@ -32,13 +35,12 @@ if __name__ == "__main__":
 		search_alg = raw_input("enter a valid search (UCS,GS,BFS,A-STAR,DFS): ").upper()
 	
 	try:
-		cost = int(sys.argv[3])
-	
+		cost_flag = bool(sys.argv[3]) #if cost exists cost_flag will be true
+
 	except IndexError:
-		print "print cost not defined enter 0 to continue or enter cost: "
-		cost = int(raw_input("cost: "))
+		cost_flag = False 
 
 	finally:
-		s = Search(init_str, search_alg, cost)
+		s = Search(init_str, search_alg, cost_flag)
 		s.search()
 
