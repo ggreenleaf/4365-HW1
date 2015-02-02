@@ -87,7 +87,13 @@ class Search:
 		if not self.is_in_expanded(state):
 			self.expanded.append(state) #
 			for i in range(self.length):
-				cost = state.cost + 1 #total path cost
+				
+				if self.cost_flag: #cost will be the steps for x 
+					cost = abs(state.string.index("x") - i)    
+				else:
+					cost = state.cost + 1 #total path cost
+				
+
 				successor = State(self.cur_tree_id,cost, state.string) #create a copy of node to apply move then add to L and tree
 				self.cur_tree_id += 1
 				if i != state.string.index('x'): #don't move x into itself
