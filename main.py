@@ -23,8 +23,8 @@ if __name__ == "__main__":
 	#main input to run the program will be python main.py <starting positions> <BFS|A-STAR|UCS|DFS|GS> [-cost] 
 	#if cost is passed then use variable cost else use constant cost for search
 
-	init_str = sys.argv[1].lower()   # change input
-	search_alg = sys.argv[2].upper() # avoid case issues
+	init_str = sys.argv[1].lower()   # change input lower
+	search_alg = sys.argv[2].upper() # avoid case issues upper for Search since most searches are acronyms
 	
 	while not is_valid_start(init_str):
 		print "Please enter a valid starting board"

@@ -10,7 +10,11 @@ class State:
 	def __eq__(self, other):
 		return self.string == other.string
 
-	def count_misplaced(self): #our huesristic function
+	
+	#our h(n) function
+	#count the number of tiles out of place for example
+	# the board wwxbb will have 4 tiles misplaced because
+	def count_misplaced(self): 
 		'''returns the number of outplaced tiles in string'''
 		n = len(self.string)
 		misplaced = 0
@@ -21,6 +25,7 @@ class State:
 				misplaced += 1
 			if i > n//2 and self.string[i] != "w":
 				misplaced += 1
+		
 		return misplaced
 
 

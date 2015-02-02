@@ -2,19 +2,6 @@ from treelib import Tree
 from Queue import Queue
 from state import State
 
-#given a init_state string s
-#find the given goal state for the game
-# the goal state is a state such that the string 
-# as blacks on the left side and whites on the right
-# with an x seperating the 2
-def get_goal_string(s):
-	'''returns the goal state of board of s'''
-	length = len(s)
-	blacks = ["b" for i in xrange(length//2)]
-	whites = ["w" for i in xrange(length//2)]
-	return "".join(blacks) + "x" + "".join(whites)
-
-
 
 #Search contain all the methods and members to run the different searches
 # self.tree is the search tree created by searches
