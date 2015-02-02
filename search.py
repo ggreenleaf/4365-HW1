@@ -1,4 +1,4 @@
-from treelib import Tree
+from treelib import Tree #tree library provided by 
 from Queue import Queue
 from state import State
 
@@ -23,6 +23,7 @@ class Search:
 		if arg == "BFS":
 			self.L = Queue()
 			self.L.put(init_state)
+		
 		else:
 			if arg not in ["DFS","UCS","A-STAR","GS"]:
 				arg = "DFS" #if not a valid search default to DFS
