@@ -1,8 +1,12 @@
-<b>Running the program: </b>
+<h1>Group Members<h1>
 
-The program was written in python version 2.7 and should run on any 
-system that can run python 2.7 programs. Unzip the file and you should have 3 files 
+<h1>List of Source Files</h1>
 
+<h1>Platform</h1>
+
+<h1>Problems</h1>
+
+<h1>Running program</h1>
 
 
 
