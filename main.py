@@ -1,4 +1,5 @@
 from search import Search 
+from state import State
 import sys
 
 #parse input from command line
@@ -43,6 +44,7 @@ if __name__ == "__main__":
 		cost_flag = False 
 
 	finally:
-		s = Search(init_str, search_alg, cost_flag)
+		init_state = State(0,0, init_str)
+		s = Search(init_state, search_alg, cost_flag)
 		s.search()
 

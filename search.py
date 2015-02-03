@@ -11,13 +11,12 @@ from state import State
 # cur_tree_id will be the id of a node in the tree each node must have a unique id
 # cost_flag is True if using a variable cost or False if using a constant cost
 class Search:
-	def __init__ (self, init_str, arg, cost_flag):
+	def __init__ (self, init_state, arg, cost_flag):
 		self.cost_flag = cost_flag
 		self.tree = Tree()
 		self.arg = arg
-		init_state = State(0,0,init_str) 
 
-		self.length = len(init_str) #length of puzzle used for making moves
+		self.length = len(init_state.string) #length of puzzle used for making moves
 		
 		#data structure for BFS is a Queue import Queue class for L
 		if arg == "BFS":
