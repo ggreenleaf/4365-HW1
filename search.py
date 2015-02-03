@@ -108,7 +108,7 @@ class Search:
 		return state in self.expanded
 
 	def is_goal (self, state):
-		# returns true if node as no misplaced tiles
+		# returns true if state as no misplaced tiles
 		return not bool(state.num_misplaced) 
 
 	def add_to_tree (self, state, parent):
@@ -122,8 +122,10 @@ class Search:
 			node = self.tree[node.bpointer]
 			move_list.append(node)
 		
-		#reverse move_list and print 
+		#reverse move_list because first node is the goal and you want first node to be root Path(root->goal)
 		move_list = list(reversed(move_list))
+		print "board movements start at the left index 0 "
+		print "example initial wxb step 1: move 0 xwb"  
 		print "step 0: ", move_list[0].tag
 		for i in range(1, len(move_list)):
 			print "step %i: " % i, "move %i"% move_list[i].tag.index("x"), move_list[i].tag
