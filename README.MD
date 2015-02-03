@@ -58,12 +58,21 @@ The program was developed on Mac OSX Yosemite using Python. However it should ru
 
 <h3>Problems</h3>
 
+One of the problems I ran into was how I wanted to represent the priority queue in python. I could have imported a outside library but instead I chose to use a python list. In python the list can be treated like a stack with a pop and append function to remove and add to the top of the stack. In all Search algorithms a list is used except for the BFS because a queue is needed. To treat the list like a priority queue I sort the list while the value used to sort is our f(n) which is h(n), g(n), or h(n) + g(n). Since you want the the lowest value the list is sorted in reverse so you can pop from the list and get the lowest.
+
+Another Problem I had was comparing classes to each other in python. in Python there is a __eq__() method that can be overloaded in a class. In the State class i define __eq__(self,other) that compares the objects strings if they are the same then return true if not return false.
+
+
 <h3>Running program</h3>
 To Run the program unzip the file and in command line or similiar program the command is
 
-python main.py <starting-board> <BFS|DFS|A-STAR|UCS|GS> [cost]
+	python main.py [starting-board] [BFS|DFS|A-STAR|UCS|GS] [cost]
 
 the starting board and search are required and the cost is a flag that will change the cost function to a variable cost default is constant
 for example to do an a-star search on a starting board wwxbb with no variable cost, the command would be
 
 	python main.py wwxbb A-STAR 
+
+the maximum length of a starting board can be 13 that is 6 blacks and 6 whites and 1 x
+
+
