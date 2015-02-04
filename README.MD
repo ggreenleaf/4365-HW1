@@ -1,4 +1,5 @@
 <h3>Group Members<h3>
+Worked on the project by myself no group members
 
 <h3>List of Source Files</h3>
 folder structure should like something like this after unzipping project
@@ -74,5 +75,7 @@ for example to do an a-star search on a starting board wwxbb with no variable co
 	python main.py wwxbb A-STAR 
 
 the maximum length of a starting board can be 13 that is 6 blacks and 6 whites and 1 x
+
+I succesfully unzipped the directory and ran an example program on the school linux server for students (cs2.utdallas.edu) 
 
 
