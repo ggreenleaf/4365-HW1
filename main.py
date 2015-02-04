@@ -1,9 +1,8 @@
-from search import Search 
 import sys
 
-#parse input from command line
-#will return a tuple of search alg, init_str, and cost
+sys.path.append("treelib/treelib/")
 
+from search import Search 
 
 #take in a string that could be the intial board 
 #return True if its valid else return False

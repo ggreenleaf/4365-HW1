@@ -1,4 +1,6 @@
-from treelib import Tree
+import sys
+sys.path.append("treelib/treelib/") #use static treelib if not in default packages
+from tree import Tree
 from Queue import Queue
 from state import State
 
@@ -10,6 +12,8 @@ from state import State
 # expanded will be a list of expanded nodes to reinsure a node is only expanded once
 # cur_tree_id will be the id of a node in the tree each node must have a unique id
 # cost_flag is True if using a variable cost or False if using a constant cost
+
+
 class Search:
 	def __init__ (self, init_str, arg, cost_flag):
 		self.cost_flag = cost_flag
