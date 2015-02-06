@@ -49,20 +49,21 @@ class Search:
 	# reverse the sorted list and pop.
 	def get(self):
 		if isinstance(self.L, Queue):
-			return self.L.get()
+			state = self.L.get()
 		
 		elif isinstance(self.L, list):
 			if self.arg == "UCS":
-				self.L.sort(key = lambda n: n.cost, reverse=True) 
+				self.L.sort(key = lambda n: (n.cost, n.tid), reverse=True) 
 
 			elif self.arg == "A-STAR":
-				self.L.sort(key = lambda n: n.cost + n.num_misplaced, reverse=True)
+				self.L.sort(key = lambda n: ((n.cost + n.num_misplaced),n.tid), reverse=True)
 
 			#returns lowest f cost where f(n)=h(n)
 			elif self.arg == "GS":
-				self.L.sort(key = lambda n: n.num_misplaced, reverse=True)
+				self.L.sort(key = lambda n: (n.num_misplaced,n.tid), reverse=True)
 
-			return self.L.pop()
+			state = self.L.pop()
+			return state
 
 	def put(self,state):
 		if isinstance(self.L, Queue):
@@ -84,27 +85,31 @@ class Search:
 		while not self.is_empty():
 			node = self.get()			
 			if self.is_goal(node):
-				return self.path_to_goal(node)
+				break
 			else:
 				self.expand(node)
 
+		self.path_to_goal(node)
+	
 	def expand(self,state):
 		if not self.is_in_expanded(state):
 			self.expanded.append(state) #
 			for i in range(self.length):
 				
 				if self.cost_flag: #cost will be the steps for x 
-					cost = abs(state.string.index("x") - i)    
+
+					cost = abs(state.string.index("x") - i)  
+					
 				else:
 					cost = state.cost + 1 #total path cost
 				
-
 				successor = State(self.cur_tree_id,cost, state.string) #create a copy of node to apply move then add to L and tree
 				self.cur_tree_id += 1
 				if i != state.string.index('x'): #don't move x into itself
 					successor.move(i)
 					self.put(successor) #put state into data structure L 
 					self.add_to_tree(successor,state)
+				
 
 
 	def is_in_expanded (self, state):
